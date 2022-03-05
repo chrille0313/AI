@@ -1,4 +1,6 @@
-from func import Vector2, Particle, Colors, draw_arrow
+from colors import Colors
+from draw import draw_arrow, draw_line
+from pygame import Vector2
 
 
 class VectorPointer:
@@ -16,16 +18,16 @@ class VectorPointer:
             self.vector += affectFunction(p, affector)
 
     def draw(self):
-        draw_arrow(self.pos, self.pos + self.vector.normalize() * 10, 3)
-        # draw_line(self.pos, self.pos + self.vector.normalize() * 10)
+        # draw_arrow(self.pos, self.pos + self.vector.normalize() * 10, 3)
+        draw_line(self.pos, self.pos + self.vector.normalize() * 10)
 
 
 class VectorField:
-    def __init__(self, sizeX, sizeY, density):
+    def __init__(self, sizeX, sizeY, density, affectorClass):
         self.size = Vector2(sizeX, sizeY)
         self.density = density
 
-        self.vectors = [VectorPointer(x * density, y * density, Particle) for y in range(int(sizeY/density)) for x in range(int(sizeX/density))]
+        self.vectors = [VectorPointer(x * density, y * density, affectorClass) for y in range(int(sizeY/density)) for x in range(int(sizeX/density))]
 
     def draw(self):
         for vector in self.vectors:

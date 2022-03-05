@@ -1,4 +1,5 @@
-from func import Vector2, draw_circle
+from pygame import Vector2
+from draw import draw_circle
 
 
 class Particle:

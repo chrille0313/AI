@@ -8,7 +8,7 @@ class App:
         self.windowSize = self.windowW, self.windowH = windowW, windowH
         self.window = pygame.display.set_mode(self.windowSize)
 
-        self.vectorField = VectorField(windowW, windowH, 20)
+        self.vectorField = VectorField(windowW, windowH, 20, Particle)
 
         self.particles = []
 
