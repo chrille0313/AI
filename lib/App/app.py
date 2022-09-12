@@ -28,7 +28,7 @@ class PygameGUI(GUI):
 
 
 class App:
-	def __init__(self, windowSize, fps=60, render=True):
+	def __init__(self, windowSize, fps=0, render=True):
 		self.windowSize = self.windowW, self.windowH = windowSize
 		self.windowCenter = (self.windowW / 2, self.windowH / 2)
 
