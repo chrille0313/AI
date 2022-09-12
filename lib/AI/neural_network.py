@@ -18,7 +18,7 @@ class NeuralNetwork:
 		self.layers = [Layer(a, b) for a, b in zip(layerSizes[:-1], layerSizes[1:])]
 
 	def process(self, inputs, f):
-		output = inputs[:]
+		output = np.array(inputs).reshape((len(inputs), 1))
 
 		for layer in self.layers:
 			output = layer.activate(output, f)
@@ -27,5 +27,5 @@ class NeuralNetwork:
 
 	def mutate(self, mutationSize=0.02):
 		for layer in self.layers:
-			layer.weights *= np.random.uniform(-mutationSize, mutationSize, layer.weights.shape)
-			layer.biases *= np.random.uniform(-mutationSize, mutationSize, layer.biases.shape)
+			layer.weights *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.weights.shape)
+			layer.biases *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.biases.shape)
