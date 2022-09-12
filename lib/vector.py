@@ -1,4 +1,4 @@
-from colors import Colors
+from lib.colors import Colors
 from draw import draw_arrow, draw_line
 from pygame import Vector2
 

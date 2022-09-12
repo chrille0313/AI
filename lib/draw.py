@@ -1,5 +1,5 @@
 import pygame
-from colors import Colors
+from lib.colors import Colors
 from numpy import degrees, radians, arctan2, sin, cos
 
 
