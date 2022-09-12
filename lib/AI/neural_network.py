@@ -1,19 +1,4 @@
 import numpy as np
-from func import sigmoid
-
-"""
-class Neuron:
-	def __init__(self, weights=None, bias=0, value=0):
-		self.value = value
-		self.weights = weights if weights is not None else []
-		self.bias = bias
-
-	def process(self, inputs):
-		return np.dot(inputs, self.weights) + self.bias
-
-	def activate(self, inputs, activationFunction):
-		return activationFunction(self.process(inputs))
-"""
 
 
 class Layer:
@@ -42,11 +27,5 @@ class NeuralNetwork:
 
 	def mutate(self, mutationSize=0.02):
 		for layer in self.layers:
-			layer.weights += np.random.uniform(-mutationSize, mutationSize, layer.weights.shape)
-			layer.biases += np.random.uniform(-mutationSize, mutationSize, layer.biases.shape)
-
-
-# network = NeuralNetwork([3, 3, 5, 3, 1])
-# X = np.ones((3, 1))
-# print(X)
-# print(network.process(X, sigmoid))
+			layer.weights *= np.random.uniform(-mutationSize, mutationSize, layer.weights.shape)
+			layer.biases *= np.random.uniform(-mutationSize, mutationSize, layer.biases.shape)
