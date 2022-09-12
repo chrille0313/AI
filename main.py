@@ -90,13 +90,13 @@ class GeneticPlayer(Player):
 
 			processedBoard.append(processedRow)
 
-		return [item for row in processedBoard for item in row]
+		return processedBoard
 
 	def get_move(self, board):
-		inputVector = self.process_board(board)
+		processedWorld = self.process_board(board)
+		inputVector = [item for row in processedWorld for item in row]
 		output = self.brain.process(inputVector, sigmoid)
-		move = np.argmax(output)
-		return self.possibleMoves[move]
+		return self.possibleMoves[np.argmax(output)]
 
 
 class SnakeGame(App):
@@ -182,7 +182,7 @@ def reproduce(reproducibleAgents, populationSize):
 
 	for agent in reproducibleAgents:
 		mutatedAgent = deepcopy(agent)
-		mutatedAgent.brain.mutate()
+		mutatedAgent.brain.mutate(0.1)
 		newPopulation.append(mutatedAgent)
 
 	newPopulation.extend(create_population(populationSize - len(newPopulation)))
@@ -226,6 +226,7 @@ if __name__ == '__main__':
 			print(f"Best agent score: {bestAgent.points}")
 			oldPoints = bestAgent.points
 			bestAgent.points = 0
+			bestAgent.snake = Snake()
 			SnakeGame(boardSize, bestAgent, display=True, displayFPS=10).run()
 			bestAgent.points = oldPoints
 
