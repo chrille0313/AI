@@ -1,5 +1,5 @@
 import pygame
-from lib.func import Colors
+from lib.colors import Colors
 
 """
 class GUI:
@@ -31,7 +31,6 @@ class App:
 	def __init__(self, windowSize, fps=60, render=True):
 		self.windowSize = self.windowW, self.windowH = windowSize
 		self.windowCenter = (self.windowW / 2, self.windowH / 2)
-		self.window = pygame.display.set_mode(windowSize)
 
 		self.clock = pygame.time.Clock()
 		self.fps = fps
@@ -52,6 +51,8 @@ class App:
 		else:
 			pygame.display.quit()
 			pygame.quit()
+
+		self.on_set_render(val)
 
 	def run(self):
 		self.main_loop()
@@ -90,6 +91,9 @@ class App:
 		pass
 
 	def on_events(self):
+		pass
+
+	def on_set_render(self, val):
 		pass
 
 
