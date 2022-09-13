@@ -34,7 +34,7 @@ class App:
 
 		self.clock = pygame.time.Clock()
 		self.fps = fps
-		self.running = True
+		self.running = False
 		self.render = render
 
 	@property
@@ -55,6 +55,7 @@ class App:
 		self.on_set_render(val)
 
 	def run(self):
+		self.running = True
 		self.main_loop()
 
 	def events(self):
