@@ -1,4 +1,5 @@
 import random
+import sys
 
 import numpy as np
 
@@ -10,6 +11,7 @@ from lib.colors import Colors
 from lib.AI.neural_network import NeuralNetwork
 from lib.AI.func import sigmoid
 
+BOARD_SIZE = (25, 25)
 MOVES = UP, RIGHT, DOWN, LEFT = (0, 1), (1, 0), (0, -1), (-1, 0)
 EMPTY, FOOD, SNAKE = 0, 1, -1
 
@@ -57,6 +59,7 @@ class Player:
 	def __init__(self, snake: Snake):
 		self.snake = snake
 		self.points = 0
+		self.turnsSurvived = 0
 
 		self.possibleMoves = [None, self.snake.turn_left, self.snake.turn_right]
 
@@ -100,7 +103,7 @@ class GeneticPlayer(Player):
 
 
 class SnakeGame(App):
-	def __init__(self, gridSize, player=None, foodCount=4, maxTurns=50, display=False, displayFPS=10):
+	def __init__(self, gridSize, player=None, foodCount=4, maxTurns=100, display=False, displayFPS=10):
 		# GUI
 		self.display = display
 		self.displayFps = displayFPS
@@ -155,6 +158,7 @@ class SnakeGame(App):
 			self.board[foodPos[1]][foodPos[0]] = FOOD
 
 		self.turn += 1
+		self.player.turnsSurvived += 1
 
 		if self.turn >= self.maxTurns:
 			self.running = False
@@ -174,15 +178,15 @@ class SnakeGame(App):
 
 
 def create_population(populationSize):
-	return [GeneticPlayer(Snake(), vision=10) for _ in range(populationSize)]
+	return [GeneticPlayer(Snake()) for _ in range(populationSize)]
 
 
 def reproduce(reproducibleAgents, populationSize):
 	newPopulation = []
 
 	for agent in reproducibleAgents:
-		mutatedAgent = deepcopy(agent)
-		mutatedAgent.brain.mutate(0.1)
+		mutatedAgent = GeneticPlayer(Snake(), agent.vision)
+		mutatedAgent.brain.layers = agent.brain.mutate_copy(0.1)
 		newPopulation.append(mutatedAgent)
 
 	newPopulation.extend(create_population(populationSize - len(newPopulation)))
@@ -191,43 +195,49 @@ def reproduce(reproducibleAgents, populationSize):
 
 
 def new_generation(population):
-	population.sort(key=lambda agent: agent.points, reverse=True)
+	population.sort(key=lambda p: get_fitness(p), reverse=True)
 	top25 = population[:len(population) // 4]
-
-	for agent in top25:
-		agent.points = 0
-		agent.snake = Snake()
-
 	return reproduce(top25, len(population))
 
 
+def get_fitness(agent):
+	return agent.points
+
+
+def display_agent(agent, fps):
+	agentRepresentation = GeneticPlayer(Snake(), agent.vision)
+	agentRepresentation.brain.layers = agent.brain.layers
+	SnakeGame(BOARD_SIZE, agentRepresentation, display=True, displayFPS=fps).run()
+
+
 if __name__ == '__main__':
-	boardSize = (25, 25)
 	generations = 1000
 	populationSize = 100
-
 	population = create_population(populationSize)
 
 	for generation in range(generations):
-		maxScore, bestAgent = 0, None
+		print(f"Training Generation {generation}...")
+		bestAgent, maxScore = None, 0
 
 		for agent in population:
-			SnakeGame(boardSize, agent, display=False, displayFPS=60).run()
+			game = SnakeGame(BOARD_SIZE, agent)
+			game.run()
 
-			if bestAgent is None or agent.points > maxScore:
-				# print("New best agent")
-				maxScore = agent.points
+			fitness = get_fitness(agent)
+
+			if bestAgent is None or fitness > maxScore:
 				bestAgent = agent
+				maxScore = fitness
 
-		print(f"Generation {generation}")
+			# if fitness >= 10:
+				# print(f"Found agent with high fitness ({fitness})! Displaying...")
+				# display_agent(agent, 60)
 
-		if generation % 25 == 0:
+		if generation % 50 == 0:
 			print(f"---------- Generation {generation} ----------")
 			print(f"Best agent score: {bestAgent.points}")
-			oldPoints = bestAgent.points
-			bestAgent.points = 0
-			bestAgent.snake = Snake()
-			SnakeGame(boardSize, bestAgent, display=True, displayFPS=10).run()
-			bestAgent.points = oldPoints
+
+			display_agent(bestAgent, 15)
 
 		population = new_generation(population)
+
