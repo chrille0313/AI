@@ -1,10 +1,11 @@
 import numpy as np
+from copy import deepcopy
 
 
 class Layer:
 	def __init__(self, inputNeurons, neurons):
 		self.weights = np.random.standard_normal([neurons, inputNeurons])
-		self.biases = np.zeros((neurons, 1))
+		self.biases = np.random.standard_normal((neurons, 1))
 
 	def process(self, inputs):
 		return np.dot(self.weights, inputs) + self.biases
@@ -29,3 +30,12 @@ class NeuralNetwork:
 		for layer in self.layers:
 			layer.weights *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.weights.shape)
 			layer.biases *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.biases.shape)
+
+	def mutate_copy(self, mutationSize=0.02):
+		newLayers = deepcopy(self.layers)
+
+		for layer in newLayers:
+			layer.weights *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.weights.shape)
+			layer.biases *= np.random.uniform(1 - mutationSize, 1 + mutationSize, layer.biases.shape)
+
+		return newLayers
