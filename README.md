@@ -1,2 +1,2 @@
-# MagneticAI
+# AI
  
