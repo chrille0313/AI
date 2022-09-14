@@ -1,5 +1,5 @@
 from neural_network import NeuralNetwork
-from func import sigmoid, linear, relu
+from activation_functions import sigmoid, linear, relu
 import numpy as np
 from numpy import random
 from copy import deepcopy
@@ -32,7 +32,7 @@ class Agent:
 
 def new_generation(agents, nr):
 	fitnesses = [agent.fitness for agent in agents]
-	best, worst = max(fitnesses), min(fitnesses)
+	worst = min(fitnesses)
 
 	probs = [(agent.fitness - worst) ** 2 for agent in agents]
 	tot = sum(probs)

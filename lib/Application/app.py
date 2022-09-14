@@ -1,5 +1,5 @@
 import pygame
-from lib.colors import Colors
+from lib.Application.GUI.colors import Colors
 
 """
 class GUI:
