@@ -31,18 +31,15 @@ class NeuralNetwork:
 
 		return output
 
-	def mutate(self, mutationSize=0.02, layers=None):
-		layers = layers if layers is not None else self.layers
-
+	def __mutate(self, mutationSize=0.02, layers=None):
 		for layer in layers:
 			layer.weights *= self.rng.uniform(1 - mutationSize, 1 + mutationSize, layer.weights.shape)
 			layer.biases *= self.rng.uniform(1 - mutationSize, 1 + mutationSize, layer.biases.shape)
 
 		return layers
 
+	def mutate(self, mutationSize=0.02):
+		self.__mutate(mutationSize, self.layers)
+
 	def mutate_copy(self, mutationSize=0.02):
-		newLayers = deepcopy(self.layers)
-
-		self.mutate(mutationSize, newLayers)
-
-		return newLayers
+		return self.__mutate(mutationSize, deepcopy(self.layers))
