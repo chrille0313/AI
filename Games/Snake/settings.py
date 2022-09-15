@@ -3,7 +3,8 @@ from enum import Enum
 # TODO: Enum
 
 BOARD_SIZE = (25, 25)
-MOVES = UP, RIGHT, DOWN, LEFT = (0, 1), (1, 0), (0, -1), (-1, 0)
+VISION = 10
+DIRECTIONS = UP, RIGHT, DOWN, LEFT = (0, 1), (1, 0), (0, -1), (-1, 0)
 
 
 class Directions:

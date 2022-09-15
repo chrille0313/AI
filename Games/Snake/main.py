@@ -5,11 +5,11 @@ from typing import List
 from snake import Snake
 from game import SnakeGame
 from players import RandomPlayer, GeneticPlayer
-from settings import BOARD_SIZE
+from settings import BOARD_SIZE, VISION
 
 
 def create_population(populationSize: int) -> List[GeneticPlayer]:
-	return [GeneticPlayer(Snake()) for _ in range(populationSize)]
+	return [GeneticPlayer(Snake(), VISION) for _ in range(populationSize)]
 
 
 def reproduce(population: List[GeneticPlayer], probabilities: List[float]) -> List[GeneticPlayer]:
@@ -39,7 +39,7 @@ def display_agent(agent: GeneticPlayer, fps: int):
 
 
 if __name__ == '__main__':
-	generations = 1000
+	generations = 1_000_000
 	populationSize = 100
 	population = create_population(populationSize)
 
@@ -54,11 +54,11 @@ if __name__ == '__main__':
 			if bestAgent is None or agent.fitness > bestAgent.fitness:
 				bestAgent = agent
 
-			if agent.fitness >= 4:
+			"""if agent.fitness >= 4:
 				print(f"Found agent with high fitness ({agent.fitness})! Displaying...")
-				display_agent(agent, 60)
+				display_agent(agent, 60)"""
 
-		if generation % 50 == 0:
+		if generation % 10 == 0:
 			print(f"---------- Generation {generation} ----------")
 			print(f"Best agent score: {bestAgent.score}")
 

@@ -1,5 +1,5 @@
 import random
-from settings import RIGHT, FOOD, SNAKE, EMPTY
+from settings import DIRECTIONS, FOOD, SNAKE, EMPTY
 
 from players import RandomPlayer
 from snake import Snake
@@ -10,7 +10,7 @@ from lib.Application.GUI.draw import draw_rect
 
 
 class SnakeGame(App):
-	def __init__(self, gridSize, player=None, foodCount=4, maxTurns=100, display=False, displayFPS=10, windowSize=(800, 800)):
+	def __init__(self, gridSize, player=None, foodCount=4, maxTurns=200, display=False, displayFPS=10, windowSize=(800, 800)):
 		# GUI
 		self.display = display
 		self.displayFps = displayFPS
@@ -23,8 +23,8 @@ class SnakeGame(App):
 		self.turn = 0
 
 		self.player = player if player is not None else RandomPlayer(Snake())
-		self.player.snake.pos = (self.gridSize[0] // 2, self.gridSize[1] // 2)
-		self.player.snake.dir = RIGHT
+		self.player.snake.pos = (random.randint(0, self.gridSize[0]), random.randint(0, self.gridSize[1]))
+		self.player.snake.dir = random.choice(DIRECTIONS)
 		self.player.snake.length = 3
 
 		self.food = set()

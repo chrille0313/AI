@@ -4,6 +4,7 @@ import numpy as np
 from abc import abstractmethod
 
 from snake import Snake
+from settings import DIRECTIONS, SNAKE
 
 from lib.AI import NeuralNetwork
 from lib.AI.agents import GeneticAgent
@@ -35,11 +36,12 @@ class GeneticPlayer(GeneticAgent, Player):
 		super().__init__(snake)
 
 		self.vision = vision
-		self.brain = NeuralNetwork([(2 * self.vision + 1)**2, 20, 12, len(self.possibleMoves)], relu, sigmoid)
+		self.brain = NeuralNetwork([(2 * self.vision + 1)**2 + len(DIRECTIONS), 20, 12, len(self.possibleMoves)], relu, sigmoid)
 
 	@property
 	def fitness(self):
-		return self.score
+		#return self.turnsSurvived + (2**self.score + self.score**2.1*500) - self.score**1.2*(0.25*self.turnsSurvived)**1.3
+		return self.score*self.score
 
 	def process_board(self, board):
 		processedBoard = []
@@ -49,11 +51,11 @@ class GeneticPlayer(GeneticAgent, Player):
 				processedRow = []
 				for col in range(self.snake.pos[0] - self.vision, self.snake.pos[0] + self.vision + 1):
 					if not (0 <= col < len(board[0])) or (col, row) in self.snake.body:
-						processedRow.append(-1)
+						processedRow.append(SNAKE)
 					else:
 						processedRow.append(board[row][col])
 			else:
-				processedRow = [-1] * (self.vision * 2 + 1)
+				processedRow = [SNAKE] * (self.vision * 2 + 1)
 
 			processedBoard.append(processedRow)
 
@@ -62,5 +64,6 @@ class GeneticPlayer(GeneticAgent, Player):
 	def get_move(self, board):
 		processedWorld = self.process_board(board)
 		inputVector = [item for row in processedWorld for item in row]
+		inputVector.extend([1 if direction == self.snake.dir else 0 for direction in DIRECTIONS])
 		output = self.brain.process(inputVector)
 		return self.possibleMoves[np.argmax(output)]
