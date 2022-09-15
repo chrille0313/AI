@@ -26,6 +26,8 @@ class PygameGUI(GUI):
 		self.window = pygame.display.set_mode(windowSize)
 """
 
+# TODO: Decorator for run
+
 
 class App:
 	def __init__(self, windowSize, fps=0, render=True):
@@ -56,17 +58,20 @@ class App:
 
 	def run(self):
 		self.running = True
-		self.main_loop()
+		self.__main_loop()
 
-	def events(self):
+	def __events(self):
 		if self.render:
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.running = False
+			self.__gui_events()
 
 		self.on_events()
 
-	def draw(self):
+	def __gui_events(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				self.quit_application()
+
+	def __draw(self):
 		if self.render:
 			self.window.fill(Colors.black)
 
@@ -75,15 +80,18 @@ class App:
 		if self.render:
 			pygame.display.update()
 
-	def main_loop(self):
+	def __main_loop(self):
 		while self.running:
-			self.events()
+			self.__events()
 
 			self.on_update()
 
-			self.draw()
+			self.__draw()
 
 			self.clock.tick(self.fps)
+
+	def quit_application(self):
+		self.running = False
 
 	def on_update(self):
 		pass
