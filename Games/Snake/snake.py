@@ -1,18 +1,18 @@
-from settings import DIRECTIONS, RIGHT
+from settings import Directions
 
 
 class Snake:
-	def __init__(self, pos=(0, 0), dir=RIGHT, length=3):
+	def __init__(self, pos=(0, 0), dir=Directions.RIGHT, length=3):
 		self.pos = pos
 		self.dir = dir
 		self.length = length
 		self.body = [(pos[0] - dir[0] * i, pos[1] - dir[1] * i) for i in range(length)]
 
 	def turn_right(self):
-		self.dir = DIRECTIONS[(DIRECTIONS.index(self.dir) + 1) % len(DIRECTIONS)]
+		self.dir = Directions.get_next_direction(self.dir, right=True)
 
 	def turn_left(self):
-		self.dir = DIRECTIONS[(DIRECTIONS.index(self.dir) - 1) % len(DIRECTIONS)]
+		self.dir = Directions.get_next_direction(self.dir, right=False)
 
 	def move(self):
 		self.pos = self.pos[0] + self.dir[0], self.pos[1] + self.dir[1]

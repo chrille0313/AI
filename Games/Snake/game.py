@@ -1,5 +1,5 @@
 import random
-from settings import DIRECTIONS, FOOD, SNAKE, EMPTY
+from settings import Directions, FOOD, SNAKE, EMPTY
 
 from players import RandomPlayer
 from snake import Snake
@@ -24,7 +24,7 @@ class SnakeGame(App):
 
 		self.player = player if player is not None else RandomPlayer(Snake())
 		self.player.snake.pos = (random.randint(0, self.gridSize[0]), random.randint(0, self.gridSize[1]))
-		self.player.snake.dir = random.choice(DIRECTIONS)
+		self.player.snake.dir = random.choice(Directions.ALL)
 		self.player.snake.length = 3
 
 		self.food = set()

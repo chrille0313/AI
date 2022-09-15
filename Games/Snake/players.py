@@ -4,7 +4,7 @@ import numpy as np
 from abc import abstractmethod
 
 from snake import Snake
-from settings import DIRECTIONS, SNAKE
+from settings import Directions, SNAKE
 
 from lib.AI import NeuralNetwork
 from lib.AI.agents import GeneticAgent
@@ -36,7 +36,7 @@ class GeneticPlayer(GeneticAgent, Player):
 		super().__init__(snake)
 
 		self.vision = vision
-		self.brain = NeuralNetwork([(2 * self.vision + 1)**2 + len(DIRECTIONS), 20, 12, len(self.possibleMoves)], relu, sigmoid)
+		self.brain = NeuralNetwork([(2 * self.vision + 1)**2 + len(Directions.ALL), 20, 12, len(self.possibleMoves)], relu, sigmoid)
 
 	@property
 	def fitness(self):
@@ -64,6 +64,6 @@ class GeneticPlayer(GeneticAgent, Player):
 	def get_move(self, board):
 		processedWorld = self.process_board(board)
 		inputVector = [item for row in processedWorld for item in row]
-		inputVector.extend([1 if direction == self.snake.dir else 0 for direction in DIRECTIONS])
+		inputVector.extend([1 if direction == self.snake.dir else 0 for direction in Directions.ALL])
 		output = self.brain.process(inputVector)
 		return self.possibleMoves[np.argmax(output)]
