@@ -40,8 +40,8 @@ class GeneticPlayer(GeneticAgent, Player):
 
 	@property
 	def fitness(self):
-		#return self.turnsSurvived + (2**self.score + self.score**2.1*500) - self.score**1.2*(0.25*self.turnsSurvived)**1.3
-		return self.score*self.score
+		return self.turnsSurvived + 2**self.score + self.score**2.1 * 500 - 0.25 * self.turnsSurvived**1.3 * self.score**1.2
+		# return self.score*self.score
 
 	def process_board(self, board):
 		processedBoard = []
