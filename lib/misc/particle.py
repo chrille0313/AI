@@ -1,5 +1,5 @@
 from pygame import Vector2
-from lib.Application.GUI.draw import draw_circle
+from lib.GUI.draw import draw_circle
 
 
 GRAVITY = Vector2(0, 0.001)

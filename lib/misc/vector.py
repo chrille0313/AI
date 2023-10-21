@@ -1,5 +1,5 @@
-from lib.Application.GUI.colors import Colors
-from lib.Application.GUI.draw import draw_line
+from lib.GUI.colors import Colors
+from lib.GUI.draw import draw_line
 from pygame import Vector2
 
 
