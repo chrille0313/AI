@@ -1,6 +1,6 @@
 
 # Player
-JUMP_VELOCITY = 1.25
+JUMP_VELOCITY = 20
 
 # World
-GRAVITY = 0.1
+GRAVITY = 1

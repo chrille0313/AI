@@ -1,12 +1,12 @@
 import random
-from settings import Directions, FOOD, SNAKE, EMPTY
+from settings import Directions, FOOD, EMPTY
 
 from players import RandomPlayer
 from snake import Snake
 
 from lib.Application import App
-from lib.Application.GUI import Colors
-from lib.Application.GUI.draw import draw_rect
+from lib.GUI import Colors
+from lib.GUI.draw import draw_rect
 
 
 class SnakeGame(App):
