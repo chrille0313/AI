@@ -1,111 +1,51 @@
-import pygame
-from lib.Application.GUI.colors import Colors
+import time
+from time import perf_counter
 
-"""
-class GUI:
-	def __init__(self, windowSize):
-		pass
-
-	def quit(self):
-		pass
-
-	def update(self):
-		pass
-
-	def events(self):
-		pass
-
-	def draw(self):
-		pass
-
-
-class PygameGUI(GUI):
-	def __init__(self, windowSize):
-		super().__init__(windowSize)
-		pygame.init()
-		self.window = pygame.display.set_mode(windowSize)
-"""
-
-# TODO: Decorator for run
+from lib.Application.events import EventManager, Event, EventType
 
 
 class App:
-	def __init__(self, windowSize, fps=0, render=True):
-		self.windowSize = self.windowW, self.windowH = windowSize
-		self.windowCenter = (self.windowW / 2, self.windowH / 2)
-
-		self.clock = pygame.time.Clock()
+	def __init__(self, fps: float = 0):
 		self.fps = fps
 		self.running = False
-		self.render = render
 
-	@property
-	def render(self):
-		return self._render
-
-	@render.setter
-	def render(self, val):
-		self._render = val
-
-		if self.render:
-			pygame.init()
-			self.window = pygame.display.set_mode(self.windowSize)
-		else:
-			pygame.display.quit()
-			pygame.quit()
-
-		self.on_set_render(val)
+		self._event_manager = EventManager()
+		self._event_manager.add_listener(EventType.QUIT, self._quit)
 
 	def run(self):
 		self.running = True
 		self.__main_loop()
 
-	def __events(self):
-		if self.render:
-			self.__gui_events()
-
-		self.on_events()
-
-	def __gui_events(self):
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				self.quit_application()
-
-	def __draw(self):
-		if self.render:
-			self.window.fill(Colors.black)
-
-		self.on_draw()
-
-		if self.render:
-			pygame.display.update()
+	def _quit(self):
+		self.running = False
 
 	def __main_loop(self):
 		while self.running:
-			self.__events()
+			startTime = perf_counter()
+			self._event_manager.queue_event(Event(EventType.UPDATE))
+			self._event_manager.dispatch_events()
 
-			self.on_update()
+			if self.fps != 0:
+				sleepTime = max(0.0, (1 / self.fps - (perf_counter() - startTime)))
+				# print(sleepTime)
+				# print(1 / self.fps - (perf_counter() - startTime))
+				time.sleep(sleepTime)
 
-			self.__draw()
+			# endTime = perf_counter()
 
-			self.clock.tick(self.fps)
+			# print(startTime, endTime, endTime - startTime, sleepTime)
 
-	def quit_application(self):
-		self.running = False
+	def add_listener(self, event_type: EventType, listener: callable):
+		self._event_manager.add_listener(event_type, listener)
 
-	def on_update(self):
-		pass
+	def remove_listener(self, event_type: EventType, listener: callable):
+		self._event_manager.remove_listener(event_type, listener)
 
-	def on_draw(self):
-		pass
-
-	def on_events(self):
-		pass
-
-	def on_set_render(self, val):
-		pass
+	def queue_event(self, event: Event):
+		self._event_manager.queue_event(event)
 
 
 if __name__ == '__main__':
-	app = App((1280, 720), 1)
+	app = App(60)
 	app.run()
+
